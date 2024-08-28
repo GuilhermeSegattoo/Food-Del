@@ -69,6 +69,7 @@
     justify-content: center;
     background-color: #eaeaea;
     border-radius: 4px;
+    width: 220px;
 }
 .cart-promocode-input input{
     background: transparent;
@@ -84,4 +85,17 @@
     border: none;
     color: white;
     border-radius: 4px;
+    cursor: pointer;
+}
+@media (max-width:750px) {
+    .cart-bottom{
+        flex-direction: column-reverse;
+    }
+    .cart-promocode{
+        justify-content: start;
+    }
+    .cart-promocode-input{
+       margin-bottom: 30px;
+    }
+    
 }
