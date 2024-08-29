@@ -1,4 +1,4 @@
-# Sistema de Gestão para Restaurantes Tomatto Food del
+# Sistema de Gestão para Restaurantes Tomatto Food delivery
 
 Este projeto é um sistema completo para gerenciamento de restaurantes, desenvolvido com React, MongoDB, Express e Node.js. O sistema inclui funcionalidades para login de usuários, visualização e gerenciamento de menu, processamento de pedidos e uma tela administrativa para o gerenciamento completo do restaurante.
 
