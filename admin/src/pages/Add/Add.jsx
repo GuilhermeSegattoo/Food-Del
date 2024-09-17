@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import './Add.css';
 import { assets } from '../../assets/assets';
+import axios from 'axios'
+import { toast } from 'react-toastify';
 
 
-const Add = () => {
+const Add = ({url}) => {
+  
   const [image, setImage] = useState(null);  // Corrigir o estado inicial da imagem
   const [data, setData] = useState({
     name: "",
@@ -14,12 +17,32 @@ const Add = () => {
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();
-    const formData =  new FormData();
-    formData.append("name",data.name)
+    const formData = new FormData();
+    formData.append("name", data.name)
     formData.append("description", data.description)
     formData.append("price", Number(data.price))
     formData.append("category", data.category)
-    formData.append("image",image)
+    formData.append("image", image)
+    try {
+      const response = await axios.post(`${url}/api/food/add`, formData);
+    
+      // Verificar o status HTTP diretamente
+      if (response.status === 200 && response.data.success) {
+        setData({
+          name: "",
+          description: "",
+          price: "",
+          category: "Saladas"
+        });
+        setImage(null);  // Limpa a imagem após o envio
+        toast.success("Adicionado com sucesso!")
+      } else {
+        toast.error("Erro ao adicionar o produto, tente novamente!");
+      }
+    } catch (error) {
+      console.log("Erro no envio do formulário", error);
+      
+    }
     // Aqui você pode adicionar a lógica para enviar o formulário
   };
 
