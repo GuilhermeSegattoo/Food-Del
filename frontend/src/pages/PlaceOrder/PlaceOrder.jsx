@@ -1,10 +1,10 @@
 import { useContext, useEffect, useState } from 'react';
 import './PlaceOrder.css';
 import { StoreContext } from '../../context/StoreContext';
+import axios from 'axios';
 
 const PlaceOrder = () => {
   const { getTotalCartAmount, token, food_list, cartItems, url } = useContext(StoreContext);
-
 
   const [data, setData] = useState({
     firstName: '',
@@ -21,38 +21,139 @@ const PlaceOrder = () => {
   const onChangeHandler = (event) => {
     const name = event.target.name;
     const value = event.target.value;
-    setData((prevData) => ({ ...prevData, [name]: value }));
+    setData((data) => ({ ...data, [name]: value }));
   };
 
   useEffect(() => {
     console.log(data);
   }, [data]);
 
-  // Adiciona preventDefault ao clique do botão
-  const handleCheckout = (event) => {
+  const placeOrder = async (event) => {
     event.preventDefault();
-    // Adicione a lógica de navegação ou processamento do pedido
+    let orderItems = [];
+    if (food_list && cartItems) {
+      food_list.forEach((item) => {
+        if (item && item._id && cartItems[item._id] > 0) {
+          let itemInfo = { ...item, quantity: cartItems[item._id] };
+          orderItems.push(itemInfo);
+        }
+      });
+    }
+
+    let orderData = {
+      address: data,
+      items: orderItems,
+      amount: getTotalCartAmount() + 2,
+    };
+
+    // Verificação da URL
+    console.log('URL utilizada:', url);
+
+    try {
+      // Verificação se a URL está corretamente formada
+      let response = await axios.post(`${url}/api/order/place`, orderData, { headers: { token } });
+      if (response.data && response.data.success) {
+        const { session_url } = response.data;
+        window.location.replace(session_url);
+      } else {
+        alert('Erro ao enviar o pedido');
+      }
+    } catch (error) {
+      // Logs detalhados para ajudar na depuração
+      console.error('Error placing order:', error);
+      if (error.response) {
+        console.log('Erro na resposta da API:', error.response.data);
+      } else if (error.request) {
+        console.log('Erro na requisição:', error.request);
+      } else {
+        console.log('Erro desconhecido:', error.message);
+      }
+      alert('Erro ao enviar o pedido');
+    }
   };
 
   return (
-    <form className='place-order'>
+    <form onSubmit={placeOrder} className="place-order">
       <div className="place-order-left">
         <p className="title">Informações do Delivery</p>
         <div className="mult-fields">
-          <input name='firstName' onChange={onChangeHandler} value={data.firstName} type="text" placeholder='Primeiro nome' />
-          <input name='lastName' onChange={onChangeHandler} value={data.lastName} type="text" placeholder='Segundo nome' />
+          <input
+            required
+            name="firstName"
+            onChange={onChangeHandler}
+            value={data.firstName}
+            type="text"
+            placeholder="Primeiro nome"
+          />
+          <input
+            required
+            name="lastName"
+            onChange={onChangeHandler}
+            value={data.lastName}
+            type="text"
+            placeholder="Segundo nome"
+          />
         </div>
-        <input name='email' onChange={onChangeHandler} value={data.email} type="text" placeholder='Email' />
-        <input name='street' onChange={onChangeHandler} value={data.street} type="text" placeholder='Rua' />
+        <input
+          required
+          name="email"
+          onChange={onChangeHandler}
+          value={data.email}
+          type="text"
+          placeholder="Email"
+        />
+        <input
+          required
+          name="street"
+          onChange={onChangeHandler}
+          value={data.street}
+          type="text"
+          placeholder="Rua"
+        />
         <div className="mult-fields">
-          <input name='city' onChange={onChangeHandler} value={data.city} type="text" placeholder='Cidade' />
-          <input name='state' onChange={onChangeHandler} value={data.state} type="text" placeholder='Estado' />
+          <input
+            required
+            name="city"
+            onChange={onChangeHandler}
+            value={data.city}
+            type="text"
+            placeholder="Cidade"
+          />
+          <input
+            required
+            name="state"
+            onChange={onChangeHandler}
+            value={data.state}
+            type="text"
+            placeholder="Estado"
+          />
         </div>
         <div className="mult-fields">
-          <input name='zipcode' onChange={onChangeHandler} value={data.zipcode} type="text" placeholder='CEP' />
-          <input name='country' onChange={onChangeHandler} value={data.country} type="text" placeholder='País' />
+          <input
+            required
+            name="zipcode"
+            onChange={onChangeHandler}
+            value={data.zipcode}
+            type="text"
+            placeholder="CEP"
+          />
+          <input
+            required
+            name="country"
+            onChange={onChangeHandler}
+            value={data.country}
+            type="text"
+            placeholder="País"
+          />
         </div>
-        <input name='phone' onChange={onChangeHandler} value={data.phone} type="text" placeholder='Telefone' />
+        <input
+          required
+          name="phone"
+          onChange={onChangeHandler}
+          value={data.phone}
+          type="text"
+          placeholder="Telefone"
+        />
       </div>
       <div className="place-order-right">
         <div className="cart-total">
@@ -73,7 +174,7 @@ const PlaceOrder = () => {
               <b>R${getTotalCartAmount() === 0 ? 0 : getTotalCartAmount() + 2}</b>
             </div>
           </div>
-          <button onClick={()=>navigate('/order')}>Ir para o checkout</button>
+          <button type="submit">Ir para o checkout</button>
         </div>
       </div>
     </form>
