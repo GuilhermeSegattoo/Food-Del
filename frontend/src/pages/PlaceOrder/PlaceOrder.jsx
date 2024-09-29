@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState,useNavigate } from 'react';
 import './PlaceOrder.css';
 import { StoreContext } from '../../context/StoreContext';
 import axios from 'axios';
@@ -71,6 +71,20 @@ const PlaceOrder = () => {
       alert('Erro ao enviar o pedido');
     }
   };
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    console.log('Token:', token);
+    console.log('Total Cart Amount:', getTotalCartAmount());
+    
+    if (!token) {
+      navigate('/cart');
+    } else if (getTotalCartAmount() === 0) {
+      navigate('/cart');
+    }
+  }, [token, navigate]);
+  
 
   return (
     <form onSubmit={placeOrder} className="place-order">
