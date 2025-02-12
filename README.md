@@ -15,16 +15,26 @@ Este projeto é um sistema completo para gerenciamento de restaurantes, desenvol
 - **Backend:** Node.js, Express
 - **Banco de Dados:** MongoDB
 
-## Instalação
+## Instalação e deploy
+
+Projeto não possui deploy, por estar incluso o back-end no projeto! Recomendo que clone ou instale o projeto e altere as variaveis de ambiente ( .env, .env.local )
 
 Para iniciar o projeto, siga os passos abaixo:
 
 1. **Clone o repositório:**
 
    ```bash
-   git clone https://github.com/seu-usuario/seu-repositorio.git
+   git clone https://github.com/GuilhermeSegattoo/Food-Del.git
 
 2. **Instale as dependências**
-   npm i
-3. **Rode o projeto**
-   npm run dev     
+   - npm i em cada pasta ou seja 3 terminais diferentes
+3. **Altere as variaveis de ambiente para as suas**
+   - Exemplo:
+   - jWT_SECRET = "sua chave"
+   - STRIPE_SECRET_KEY = "sua chave de teste"
+   - MONGODB = "link com seu banco e senha" - configuração pelo site do MongoDB.
+4. **Rode o projeto iniciando cada pasta com**
+    - admin = npm run dev
+    - backend = npm run server
+    - frontend = npm run dev   
+       
